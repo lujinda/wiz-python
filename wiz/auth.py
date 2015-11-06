@@ -19,20 +19,13 @@ class AuthManager(object):
 
         return _instance
 
-    @property
-    def access_token(self):
-        return {
-                'token'         :       getattr(self, '_token', None),
-        #        'user_guid'     :       getattr(self, '_user_guid', None),
-                'kb_guid'       :       getattr(self, '_kb_guid', None),
-                'cert_no'       :       getattr(self, '_CertNo', None),
-                'user_id'       :       getattr(self, '_user_id', None),
-                }
-
-    def __init__(self, username = None, password = None):
+    def __init__(self, username = None, password = None, access_token = None):
         self.__username, self.__password = username, password
+        self.access_token = access_token
 
     def login(self, username = None, password = None):
+        if self.access_token:
+            return
         username = username or self.__username
         password = password or self.__password
 
@@ -46,9 +39,10 @@ class AuthManager(object):
         self.__login_success_after(result)
 
     def __login_success_after(self, login_response):
-        self._token = login_response['token']
-        self._user_id = login_response['user']['user_id']
-        self._user_guid = login_response['user']['user_guid']
-        self._kb_guid = login_response['kb_guid']
-        self._CertNo = login_response['cookie_str']
+        self.access_token = {
+                'token'         :       login_response['token'],
+                'user_id'       :       login_response['user']['user_id'],
+                'kb_guid'       :       login_response['kb_guid'],
+                'cert_no'        :       login_response['cookie_str'],
+                }
 
