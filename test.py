@@ -22,7 +22,7 @@ def down_attrs(note):
         with open('/tmp/' + attr.name, 'wb') as fd:
             fd.write(attr.data)
 
-wiz = Wiz('q8886888@qq.com', 'zxc123')
+wiz = Wiz('youremail', 'yourpassword')
 notebook = wiz.ls_notebooks()[0] # ls_notebooks 列出所有笔记本
 note = notebook.ls()[0] # notebook.ls 列出该笔记本下的所有笔记
 # print(note.data.text) # 笔记数据,以文本形式列出
