@@ -22,13 +22,18 @@ def down_attrs(note):
         with open('/tmp/' + attr.name, 'wb') as fd:
             fd.write(attr.data)
 
-wiz = Wiz('youremail', 'yourpassword')
+wiz = Wiz('q8886888@qq.com', 'zxc123')
+for notebook in wiz.ls_notebooks():
+    print('notebook', notebook.name)
+    for note in notebook.ls():
+        print(note.title)
+
 notebook = wiz.ls_notebooks()[0] # ls_notebooks 列出所有笔记本
 note = notebook.ls()[0] # notebook.ls 列出该笔记本下的所有笔记
-# print(note.data.text) # 笔记数据,以文本形式列出
+print(note.data.text) # 笔记数据,以文本形式列出
 
-# down_images(note)
-# down_attrs(note)
+down_images(note)
+down_attrs(note)
 
 print(wiz.find_notes('a*')[0].data.body)
 

@@ -41,7 +41,7 @@ def utf8(s):
     if is_py3:
         return isinstance(s, str) and s.encode('utf-8') or s
     else:
-        return isinstance(s, unicode) and s.encode('utf-8') or s
+        return isinstance(s, unicode) and s.encode('utf-8') or str(s)
 
 
 def adapter(manager_name):

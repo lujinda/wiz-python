@@ -63,10 +63,8 @@ def urlencode(data):
         if value == None:
             continue
 
-        value = quote_plus(str(value))
-
-        params.append("%s=%s" % (key, 
-            value))
+        params.append("%s=%s" % (utils.utf8(key), 
+            quote_plus(utils.utf8(value))))
 
     params_string = '&'.join(params)
     return params_string
@@ -149,6 +147,7 @@ class Response(object):
 class Request(object):
     def __init__(self, method, url, headers = None, data = None, files = None, debug = False, cookies = None):
         assert url.startswith('http')
+        url = utils.utf8(url)
         self.url = url
         self.method = method
         self.data = data or {}
@@ -194,9 +193,16 @@ class Request(object):
             self.set_header(key, value)
 
     def __request(self):
+        def utf8_headers(headers):
+            _headers = {}
+            for key, value in headers.items():
+                _headers[utils.utf8(key)] = utils.utf8(value)
+
+            return _headers
+
         conn = self.__conn
-        conn.request(utils.utf8(self.method), utils.utf8(self.uri), body = self.body,
-            headers = self.headers)
+        conn.request(utils.utf8(self.method), utils.utf8(self.uri), body = utils.utf8(self.body),
+            headers = utf8_headers(self.headers))
 
         response = conn.getresponse()
 
