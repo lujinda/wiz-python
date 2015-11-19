@@ -7,5 +7,5 @@
 # Description   : 
 from __future__ import print_function, unicode_literals
 
-version = '0.4'
+version = '0.5'
 

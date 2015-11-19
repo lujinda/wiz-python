@@ -28,6 +28,12 @@ class NotebookManager(BaseManager):
     def ls(self):
         result, error = self.api_request('/api/category/all')
         notebooks = []
+
+        # 用户可能会修改默认的那个笔记本名
+        if '/My Notes/' not in [n['location'] for n in result['list']]:
+            result['list'].append({u'type': u'category', u'location': u'/My Notes/', 
+                u'category_name': '我的笔记'})
+
         for raw_notebook in result['list']:
             notebooks.append(Notebook({
                 'name'      :       raw_notebook['category_name'],

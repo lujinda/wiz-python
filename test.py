@@ -23,17 +23,21 @@ def down_attrs(note):
             fd.write(attr.data)
 
 wiz = Wiz('q8886888@qq.com', 'zxc123')
+note_count = 0
 for notebook in wiz.ls_notebooks():
     print('notebook', notebook.name)
     for note in notebook.ls():
         print(note.title)
+        note_count += 1
 
-notebook = wiz.ls_notebooks()[0] # ls_notebooks 列出所有笔记本
-note = notebook.ls()[0] # notebook.ls 列出该笔记本下的所有笔记
-print(note.data.text) # 笔记数据,以文本形式列出
+print(note_count)
 
-down_images(note)
-down_attrs(note)
-
-print(wiz.find_notes('a*')[0].data.body)
-
+# notebook = wiz.ls_notebooks()[0] # ls_notebooks 列出所有笔记本
+# note = notebook.ls()[0] # notebook.ls 列出该笔记本下的所有笔记
+# print(note.data.text) # 笔记数据,以文本形式列出
+# 
+# down_images(note)
+# down_attrs(note)
+# 
+# print(wiz.find_notes('a*')[0].data.body)
+# 

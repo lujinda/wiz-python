@@ -6,8 +6,9 @@
 # Filename      : base.py
 # Description   : 
 from __future__ import unicode_literals, print_function
+
+from wiz import e
 from wiz.api import api_request
-from wiz.e import WizException
 
 __all__ = ['BaseManager']
 
@@ -34,7 +35,10 @@ class BaseManager(object):
         result, error = api_request(path, method, data, 
                 cookies)
         if error and auto_raise:
-            raise WizException(error)
+            if result['code'] == 301:
+                raise e.WizTokenInvalid(error)
+            else:
+                raise e.WizException(error)
 
         return result, error
 

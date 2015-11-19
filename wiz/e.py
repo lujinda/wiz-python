@@ -17,3 +17,7 @@ class WizException(Exception):
 class WizLoginFailed(WizException):
     pass
 
+class WizTokenInvalid(WizException):
+    pass
+
+
