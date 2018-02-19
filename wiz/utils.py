@@ -12,7 +12,7 @@ import sys
 from functools import wraps
 import re
 import zipfile
-import HTMLParser
+from HTMLParser import HTMLParser
 
 is_py3 = sys.version[0] == '3'
 
@@ -82,18 +82,42 @@ class ObjectDict(object):
         return self.__data[name]
 
 
+class _DeHTMLParser(HTMLParser):
+    def __init__(self):
+        HTMLParser.__init__(self)
+        self.__text = []
+
+    def handle_data(self, data):
+        if self.lasttag in ("script", "style"):
+            return
+
+        text = data.strip()
+        if len(text) > 0:
+            text = re.sub('[ \t\r\n]+', ' ', text)
+            self.__text.append(text + ' ')
+
+    def handle_starttag(self, tag, attrs):
+        if tag == 'p':
+            self.__text.append('\n\n')
+        elif tag == 'br':
+            self.__text.append('\n')
+
+    def handle_startendtag(self, tag, attrs):
+        if tag == 'br':
+            self.__text.append('\n\n')
+
+    def text(self):
+        return ''.join(self.__text).strip()
+
+
+
 def get_text_from_html(html):
     html = native_str(html)
-    re_html_tag_text = re.compile(r'<\s*?(script|style).*?>(.*?)<\s*?/(\1)\s*?>', re.M|re.S)
-    re_html_tag = re.compile(r'<(.+?)>', re.M | re.S)
-    re_space = re.compile(r'(\s+)');
-    html = re_html_tag_text.sub('', html)
-    html = re_html_tag.sub(b' ', html)
-    html = re_space.sub(lambda m: m.group(1)[0], html)
+    parser = _DeHTMLParser()
+    parser.feed(html)
+    parser.close()
+    return parser.text()
 
-    html = HTMLParser.HTMLParser().unescape(html.strip())
-
-    return html
 
 def get_image_from_html(html):
     return re.findall(r'<img src="(.+?)"', html, re.U)
