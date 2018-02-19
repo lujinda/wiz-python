@@ -82,6 +82,8 @@ class ObjectDict(object):
         return self.__data[name]
 
 
+
+# https://github.com/lujinda/wiz-python/issues/5
 class _DeHTMLParser(HTMLParser):
     def __init__(self):
         HTMLParser.__init__(self)
